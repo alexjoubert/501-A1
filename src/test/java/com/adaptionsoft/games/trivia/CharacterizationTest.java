@@ -38,7 +38,6 @@ public class CharacterizationTest {
 	         assertEquals(expectedOutput(), outContent.toString());
 	     }
 	 
-	     // Test fails yet failure trace has no difference
 	     private String expectedOutput() {
 	         String expectedOutput = "Chet was added\n";
 	         expectedOutput += "They are player number 1\n";
