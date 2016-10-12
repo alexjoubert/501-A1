@@ -7,8 +7,6 @@ import com.adaptionsoft.games.uglytrivia.Game;
 
 public class GameRunner {
 
-	private static boolean notAWinner;
-
 	public static void main(String[] args) {
 		Game aGame = new Game(new Random());
 		
