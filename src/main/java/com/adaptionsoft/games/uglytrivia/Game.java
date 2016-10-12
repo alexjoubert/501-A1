@@ -2,11 +2,11 @@ package com.adaptionsoft.games.uglytrivia;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.List;
 import java.util.LinkedList;
 
 public class Game {
     ArrayList players = new ArrayList();
-    int[] places = new int[6];
     int[] purses  = new int[6];
     boolean[] inPenaltyBox  = new boolean[6];
     
@@ -16,11 +16,13 @@ public class Game {
     LinkedList rockQuestions = new LinkedList();
     
     int currentPlayer = 0;
+    List<Player> playersList;
     boolean isGettingOutOfPenaltyBox;
     
     private Random rand;
     
     public  Game(Random rand){
+    	playersList = new ArrayList<Player>();
     	this.rand = rand;
     	
     	for (int i = 0; i < 50; i++) {
@@ -46,8 +48,8 @@ public class Game {
     }
     
 	public boolean add(String playerName) {
+	    playersList.add(new Player(playerName));
 	    players.add(playerName);
-	    places[howManyPlayers()] = 0;
 	    purses[howManyPlayers()] = 0;
 	    inPenaltyBox[howManyPlayers()] = false;
 	    
@@ -69,12 +71,12 @@ public class Game {
 				isGettingOutOfPenaltyBox = true;
 				
 				System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
-				places[currentPlayer] = places[currentPlayer] + roll;
-				if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+				setCurrentPlayerPlace(getCurrentPlayerPlace() + roll);
+				if (getCurrentPlayerPlace() > 11) setCurrentPlayerPlace(getCurrentPlayerPlace() - 12);
 				
 				System.out.println(players.get(currentPlayer) 
 						+ "'s new location is " 
-						+ places[currentPlayer]);
+						+ getCurrentPlayerPlace());
 				System.out.println("The category is " + currentCategory());
 				askQuestion();
 			} else {
@@ -84,12 +86,12 @@ public class Game {
 			
 		} else {
 		
-			places[currentPlayer] = places[currentPlayer] + roll;
-			if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+			setCurrentPlayerPlace(getCurrentPlayerPlace() + roll);
+			if (getCurrentPlayerPlace() > 11) setCurrentPlayerPlace(getCurrentPlayerPlace() - 12);
 			
 			System.out.println(players.get(currentPlayer) 
 					+ "'s new location is " 
-					+ places[currentPlayer]);
+					+ getCurrentPlayerPlace());
 			System.out.println("The category is " + currentCategory());
 			askQuestion();
 		}
@@ -109,15 +111,15 @@ public class Game {
 	
 	
 	private String currentCategory() {
-		if (places[currentPlayer] == 0) return "Pop";
-		if (places[currentPlayer] == 4) return "Pop";
-		if (places[currentPlayer] == 8) return "Pop";
-		if (places[currentPlayer] == 1) return "Science";
-		if (places[currentPlayer] == 5) return "Science";
-		if (places[currentPlayer] == 9) return "Science";
-		if (places[currentPlayer] == 2) return "Sports";
-		if (places[currentPlayer] == 6) return "Sports";
-		if (places[currentPlayer] == 10) return "Sports";
+		if (getCurrentPlayerPlace() == 0) return "Pop";
+		if (getCurrentPlayerPlace() == 4) return "Pop";
+		if (getCurrentPlayerPlace() == 8) return "Pop";
+		if (getCurrentPlayerPlace() == 1) return "Science";
+		if (getCurrentPlayerPlace() == 5) return "Science";
+		if (getCurrentPlayerPlace() == 9) return "Science";
+		if (getCurrentPlayerPlace() == 2) return "Sports";
+		if (getCurrentPlayerPlace() == 6) return "Sports";
+		if (getCurrentPlayerPlace() == 10) return "Sports";
 		return "Rock";
 	}
 
@@ -175,4 +177,17 @@ public class Game {
 	private boolean didPlayerWin() {
 		return !(purses[currentPlayer] == 6);
 	}
+	
+	private Player currentPlayer() {
+		return playersList.get(currentPlayer);
+	}
+	
+	private int getCurrentPlayerPlace() {
+		return currentPlayer().place();
+	}
+	
+	private void setCurrentPlayerPlace(int newPlace) {
+		currentPlayer().moveTo(newPlace);
+	}
+	
 }
